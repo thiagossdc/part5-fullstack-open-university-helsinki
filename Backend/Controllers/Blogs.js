@@ -43,7 +43,7 @@ router.delete('/:id', userExtractor, async (request, response) => {
     return response.status(204).end()
   }
 
-  if ( user.id.toString() !== blog.user.toString() ) {
+  if ( blog.user &&  user.id.toString() !== blog.user.toString() ) {
     return response.status(403).json({ error: 'user not authorized' })
   }
 
@@ -66,7 +66,7 @@ router.put('/:id', async (request, response) => {
     likes: body.likes
   }
 
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true }).populate('user', { username: 1, name: 1 })
   response.json(updatedBlog)
 })
 
